@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CodeCraft IDE</title>
+    <meta
+      name="description"
+      content="CodeCraft IDE is a browser-based coding workspace for Java, C++, Python, and more."
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -32,6 +36,7 @@
           <div class="section-label">Quick tools</div>
           <button class="tool-btn" id="new-file-btn">+ New file</button>
           <button class="tool-btn secondary" id="new-folder-btn">+ New folder</button>
+          <button class="tool-btn tertiary" id="reset-project-btn">Reset project</button>
         </div>
       </aside>
 
@@ -47,7 +52,7 @@
           </div>
 
           <div class="topbar-right">
-            <select id="language-select" aria-label="Select language">
+            <select id="language-select" aria-label="Select programming language">
               <option value="java">Java</option>
               <option value="cpp">C++</option>
               <option value="python">Python</option>
@@ -55,6 +60,8 @@
               <option value="typescript">TypeScript</option>
               <option value="html">HTML</option>
               <option value="css">CSS</option>
+              <option value="markdown">Markdown</option>
+              <option value="json">JSON</option>
             </select>
             <button class="action-btn save-btn" id="save-btn">Save</button>
             <button class="action-btn run-btn" id="run-btn">Run</button>
@@ -71,7 +78,7 @@
             <span>Output</span>
             <button class="clear-btn" id="clear-output-btn">Clear</button>
           </div>
-          <pre id="output-console" class="output-console">Ready to compile and run your project.</pre>
+          <pre id="output-console" class="output-console">CodeCraft IDE ready. Choose a file to start editing.</pre>
         </section>
       </main>
     </div>

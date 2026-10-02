@@ -1,0 +1,19 @@
+{
+  "name": "codecraft-ide",
+  "version": "1.0.0",
+  "description": "Browser-based IDE for Java, C++, Python, and more.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "ide",
+    "editor",
+    "java",
+    "cpp",
+    "python",
+    "web"
+  ],
+  "author": "CodeCraft",
+  "license": "MIT"
+}

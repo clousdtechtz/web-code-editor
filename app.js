@@ -1,438 +1,348 @@
-const STORAGE_KEY = "codecraft-ide-project-v1";
+* {
+  box-sizing: border-box;
+}
 
-const defaultProject = {
-  files: [
-    {
-      id: "src/Main.java",
-      name: "Main.java",
-      path: "src/Main.java",
-      folder: "src",
-      type: "file",
-      language: "java",
-      content: `public class Main {
-    public static void main(String[] args) {
-        System.out.println("Welcome to CodeCraft IDE!");
-        System.out.println("Write your Java code here.");
-    }
-}`
-    },
-    {
-      id: "src/App.cpp",
-      name: "App.cpp",
-      path: "src/App.cpp",
-      folder: "src",
-      type: "file",
-      language: "cpp",
-      content: `#include <iostream>
-using namespace std;
+:root {
+  --bg: #0d1117;
+  --panel: #111827;
+  --panel-soft: #161f2e;
+  --panel-alt: #1b2433;
+  --sidebar: #0b1220;
+  --border: rgba(148, 163, 184, 0.18);
+  --text: #e5edf7;
+  --muted: #9aadbf;
+  --accent: #6ee7b7;
+  --accent-strong: #34d399;
+  --blue: #60a5fa;
+  --purple: #a78bfa;
+  --danger: #f87171;
+  --warning: #fbbf24;
+  --success: #22c55e;
+}
 
-int main() {
-    cout << "Welcome to CodeCraft IDE!" << endl;
-    cout << "Write your C++ code here." << endl;
-    return 0;
-}`
-    },
-    {
-      id: "src/hello.py",
-      name: "hello.py",
-      path: "src/hello.py",
-      folder: "src",
-      type: "file",
-      language: "python",
-      content: `print("Hello from CodeCraft IDE!")
-print("Python is ready to run.")`
-    },
-    {
-      id: "README.md",
-      name: "README.md",
-      path: "README.md",
-      folder: "",
-      type: "file",
-      language: "markdown",
-      content: `# CodeCraft IDE\n\nA lightweight web-based code editor inspired by IDE workspaces.\n\n## Features\n- Multi-language editing\n- File explorer\n- Tabs and output console\n- Save to browser storage\n\n## Run\nOpen this project in a browser and click Run.`
-    }
-  ]
-};
+html, body {
+  margin: 0;
+  height: 100%;
+  font-family: "Inter", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
 
-const state = {
-  project: loadProject(),
-  activeFileId: null,
-  editor: null,
-  monacoReady: false,
-  outputs: []
-};
+body {
+  min-height: 100vh;
+}
 
-const projectTreeEl = document.getElementById("project-tree");
-const tabBarEl = document.getElementById("tab-bar");
-const outputConsoleEl = document.getElementById("output-console");
-const languageSelectEl = document.getElementById("language-select");
+button, select {
+  font: inherit;
+}
 
-function loadProject() {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (!saved) return structuredClone(defaultProject);
+button {
+  cursor: pointer;
+}
 
-  try {
-    const parsed = JSON.parse(saved);
-    return parsed.files && parsed.files.length ? parsed : structuredClone(defaultProject);
-  } catch (error) {
-    console.warn("Project load failed:", error);
-    return structuredClone(defaultProject);
+.app-shell {
+  display: flex;
+  height: 100vh;
+  background: linear-gradient(180deg, #0b1220 0%, #0d1117 100%);
+}
+
+.sidebar {
+  width: 290px;
+  background: rgba(11, 18, 32, 0.96);
+  border-right: 1px solid var(--border);
+  padding: 18px 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 8px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--accent), var(--blue));
+  color: #081320;
+  font-weight: 800;
+  font-size: 1.25rem;
+}
+
+.brand-name {
+  font-weight: 700;
+}
+
+.brand-sub {
+  color: var(--muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sidebar-section {
+  padding-top: 18px;
+}
+
+.section-label {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  margin: 0 0 12px;
+}
+
+.project-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.92rem;
+}
+
+.tree-node {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.tree-node:hover,
+.tree-node.active {
+  background: rgba(96, 165, 250, 0.12);
+}
+
+.tree-node-folder {
+  color: #dce8fb;
+  font-weight: 600;
+}
+
+.tree-node-file {
+  margin-left: 18px;
+  color: #dbeafe;
+}
+
+.tree-node-file.active {
+  background: rgba(110, 231, 183, 0.16);
+  border: 1px solid rgba(110, 231, 183, 0.28);
+}
+
+.tools-panel {
+  margin-top: auto;
+}
+
+.tool-btn,
+.action-btn,
+.clear-btn {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.tool-btn {
+  width: 100%;
+  margin-bottom: 10px;
+  background: rgba(110, 231, 183, 0.12);
+  color: var(--text);
+  border: 1px solid rgba(110, 231, 183, 0.2);
+}
+
+.tool-btn.secondary {
+  background: rgba(96, 165, 250, 0.12);
+  border-color: rgba(96, 165, 250, 0.2);
+}
+
+.tool-btn.tertiary {
+  background: rgba(248, 113, 113, 0.08);
+  border-color: rgba(248, 113, 113, 0.2);
+}
+
+.main-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.topbar {
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: rgba(17, 24, 39, 0.65);
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar-left,
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.window-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot.red { background: var(--danger); }
+.dot.yellow { background: var(--warning); }
+.dot.green { background: var(--success); }
+
+.workspace-name {
+  font-weight: 600;
+  color: var(--muted);
+}
+
+#language-select {
+  background: rgba(148, 163, 184, 0.08);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.action-btn {
+  font-weight: 600;
+}
+
+.save-btn {
+  background: rgba(148, 163, 184, 0.12);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.run-btn {
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: #062116;
+}
+
+.editor-shell {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: rgba(17, 24, 39, 0.9);
+}
+
+.tab-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px 0;
+  border-bottom: 1px solid var(--border);
+  background: rgba(17, 24, 39, 0.9);
+  overflow-x: auto;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(148, 163, 184, 0.04);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.tab.active {
+  color: var(--text);
+  background: rgba(96, 165, 250, 0.08);
+}
+
+.tab-close {
+  opacity: 0.7;
+  font-size: 0.8rem;
+}
+
+#editor-container {
+  flex: 1;
+  min-height: 300px;
+  width: 100%;
+}
+
+.output-panel {
+  height: 210px;
+  border-top: 1px solid var(--border);
+  background: rgba(11, 18, 32, 0.9);
+  display: flex;
+  flex-direction: column;
+}
+
+.output-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.clear-btn {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+
+.output-console {
+  margin: 0;
+  padding: 14px 16px;
+  overflow: auto;
+  flex: 1;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: #dbeafe;
+  background: rgba(15, 23, 42, 0.9);
+  white-space: pre-wrap;
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    width: 240px;
   }
 }
 
-function saveProject() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state.project));
-}
-
-function uniqueId() {
-  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-}
-
-function getFileById(id) {
-  return state.project.files.find((file) => file.id === id) || null;
-}
-
-function getFileExtension(fileName) {
-  const parts = fileName.split(".");
-  return parts.length > 1 ? parts.at(-1).toLowerCase() : "";
-}
-
-function detectLanguage(fileName) {
-  const extension = getFileExtension(fileName);
-  const map = {
-    java: "java",
-    cpp: "cpp",
-    c: "cpp",
-    cc: "cpp",
-    py: "python",
-    js: "javascript",
-    ts: "typescript",
-    html: "html",
-    css: "css",
-    json: "json",
-    md: "markdown"
-  };
-
-  return map[extension] || "plaintext";
-}
-
-function ensureFilePath(file) {
-  return file.path || file.name;
-}
-
-function renderTree() {
-  const folders = new Map();
-
-  state.project.files.forEach((file) => {
-    if (!file.folder) {
-      folders.set("root", [...(folders.get("root") || []), file]);
-      return;
-    }
-
-    const key = file.folder;
-    folders.set(key, [...(folders.get(key) || []), file]);
-  });
-
-  const rootEntries = [...new Set([...folders.keys(), ...state.project.files.map((f) => f.folder).filter(Boolean)])];
-
-  projectTreeEl.innerHTML = "";
-
-  const renderFolder = (folderName) => {
-    const folderFiles = folders.get(folderName) || [];
-    const folderNode = document.createElement("div");
-    folderNode.className = "tree-node tree-node-folder";
-    folderNode.innerHTML = `
-      <span>📁</span>
-      <span>${folderName || "root"}</span>
-    `;
-
-    const childWrap = document.createElement("div");
-    childWrap.style.display = "block";
-
-    folderFiles.forEach((file) => {
-      const btn = document.createElement("button");
-      btn.className = `tree-node tree-node-file ${state.activeFileId === file.id ? "active" : ""}`;
-      btn.type = "button";
-      btn.innerHTML = `
-        <span>📄</span>
-        <span>${file.name}</span>
-      `;
-      btn.addEventListener("click", () => openFile(file.id));
-      childWrap.appendChild(btn);
-    });
-
-    if (!folderFiles.length) {
-      const empty = document.createElement("div");
-      empty.className = "tree-node tree-node-file";
-      empty.style.opacity = "0.7";
-      empty.textContent = "No files yet";
-      childWrap.appendChild(empty);
-    }
-
-    folderNode.appendChild(childWrap);
-    return folderNode;
-  };
-
-  rootEntries.forEach((folderName) => {
-    if (!folderName || folderName === "root") {
-      const rootFiles = folders.get("root") || [];
-      rootFiles.forEach((file) => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = `tree-node tree-node-file ${state.activeFileId === file.id ? "active" : ""}`;
-        btn.innerHTML = `
-          <span>📄</span>
-          <span>${file.name}</span>
-        `;
-        btn.addEventListener("click", () => openFile(file.id));
-        projectTreeEl.appendChild(btn);
-      });
-      return;
-    }
-
-    projectTreeEl.appendChild(renderFolder(folderName));
-  });
-}
-
-function renderTabs() {
-  tabBarEl.innerHTML = "";
-
-  state.project.files.forEach((file) => {
-    const tab = document.createElement("button");
-    tab.type = "button";
-    tab.className = `tab ${state.activeFileId === file.id ? "active" : ""}`;
-    tab.innerHTML = `<span>${file.name}</span><span class="tab-close">×</span>`;
-    tab.addEventListener("click", (event) => {
-      if (event.target.classList.contains("tab-close")) {
-        event.stopPropagation();
-        removeFile(file.id);
-        return;
-      }
-      openFile(file.id);
-    });
-    tabBarEl.appendChild(tab);
-  });
-}
-
-function openFile(fileId) {
-  const file = getFileById(fileId);
-  if (!file) return;
-
-  state.activeFileId = fileId;
-  languageSelectEl.value = file.language || detectLanguage(file.name);
-  renderTree();
-  renderTabs();
-  updateEditorFromFile(file);
-}
-
-function updateEditorFromFile(file) {
-  if (!state.monacoReady || !state.editor) return;
-
-  const model = state.editor.getModel();
-  const currentFile = getFileById(state.activeFileId);
-
-  if (!currentFile) return;
-
-  const language = currentFile.language || detectLanguage(currentFile.name);
-  if (model && model.getValue() !== currentFile.content) {
-    state.editor.setValue(currentFile.content);
+@media (max-width: 720px) {
+  .app-shell {
+    flex-direction: column;
   }
 
-  const thisModel = state.editor.getModel();
-  if (thisModel) {
-    window.monaco.editor.setModelLanguage(thisModel, language);
-  }
-}
-
-function rememberEditorChanges() {
-  const active = getFileById(state.activeFileId);
-  if (!active || !state.editor) return;
-  active.content = state.editor.getValue();
-  saveProject();
-}
-
-function createNewFile() {
-  const fileName = prompt("Enter a new file name (example: Main.java):", "NewFile.java");
-  if (!fileName) return;
-
-  const normalized = fileName.trim();
-  if (!normalized) return;
-
-  const file = {
-    id: uniqueId(),
-    name: normalized,
-    path: normalized,
-    folder: "",
-    type: "file",
-    language: detectLanguage(normalized),
-    content: ""
-  };
-
-  state.project.files.push(file);
-  saveProject();
-  openFile(file.id);
-}
-
-function createNewFolder() {
-  const folderName = prompt("Enter folder name:", "resources");
-  if (!folderName) return;
-
-  const clean = folderName.trim();
-  if (!clean) return;
-
-  const folderKey = `${clean}`;
-  const exists = state.project.files.some((file) => file.folder === folderKey || file.path.startsWith(`${folderKey}/`));
-  if (exists) {
-    logOutput(`Folder "${clean}" already exists.`);
-    return;
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
   }
 
-  state.project.files.push({
-    id: uniqueId(),
-    name: folderKey,
-    path: folderKey,
-    folder: folderKey,
-    type: "folder",
-    language: "folder",
-    content: ""
-  });
-
-  saveProject();
-  renderTree();
-  logOutput(`Created folder: ${clean}`);
-}
-
-function removeFile(fileId) {
-  const file = getFileById(fileId);
-  if (!file) return;
-
-  if (state.project.files.length === 1) {
-    logOutput("At least one file must remain in the project.");
-    return;
+  .output-panel {
+    height: 160px;
   }
-
-  state.project.files = state.project.files.filter((item) => item.id !== fileId);
-  const nextActive = state.project.files[0];
-  saveProject();
-  openFile(nextActive.id);
 }
-
-function logOutput(message) {
-  const timestamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-  const line = `[${timestamp}] ${message}`;
-  state.outputs.push(line);
-  outputConsoleEl.textContent = state.outputs.join("\n");
-  outputConsoleEl.scrollTop = outputConsoleEl.scrollHeight;
-}
-
-function clearOutput() {
-  state.outputs = [];
-  outputConsoleEl.textContent = "Console cleared.";
-}
-
-function saveCurrentFile() {
-  const active = getFileById(state.activeFileId);
-  if (!active || !state.editor) {
-    logOutput("No file is currently open to save.");
-    return;
-  }
-
-  active.content = state.editor.getValue();
-  saveProject();
-  logOutput(`Saved: ${active.name}`);
-}
-
-function runCurrentProject() {
-  const active = getFileById(state.activeFileId);
-  if (!active) {
-    logOutput("Please select a file before running.");
-    return;
-  }
-
-  const content = state.editor ? state.editor.getValue() : active.content;
-  const language = active.language || detectLanguage(active.name);
-
-  logOutput(`Running ${active.name} (${language})`);
-
-  if (language === "javascript") {
-    try {
-      const result = Function(`"use strict";\n${content}`)();
-      logOutput(result === undefined ? "Execution finished with no return value." : String(result));
-    } catch (error) {
-      logOutput(`Runtime error: ${error.message}`);
-    }
-    return;
-  }
-
-  if (language === "python") {
-    logOutput("Python execution is available in a full backend environment. In this browser IDE, the code is prepared for execution in a connected runtime.");
-    logOutput("Current file preview:\n" + content.split("\n").slice(0, 6).join("\n"));
-    return;
-  }
-
-  if (language === "java" || language === "cpp") {
-    logOutput("This browser-based IDE is ready for Java/C++ source editing. Connect a backend compiler to enable full build and execution.");
-    logOutput("Source preview:\n" + content.split("\n").slice(0, 8).join("\n"));
-    return;
-  }
-
-  logOutput("Execution preview:\n" + content.split("\n").slice(0, 8).join("\n"));
-}
-
-function initEditor() {
-  require.config({ paths: { vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs" } });
-
-  require(["vs/editor/editor.main"], () => {
-    const activeFile = state.project.files[0];
-    state.activeFileId = activeFile.id;
-
-    state.editor = window.monaco.editor.create(document.getElementById("editor-container"), {
-      value: activeFile.content,
-      language: activeFile.language || detectLanguage(activeFile.name),
-      theme: "vs-dark",
-      minimap: { enabled: false },
-      automaticLayout: true,
-      lineNumbersMinChars: 3,
-      fontSize: 15,
-      scrollBeyondLastLine: false,
-      roundedSelection: true,
-      padding: { top: 18, bottom: 18 }
-    });
-
-    state.monacoReady = true;
-    state.editor.onDidChangeModelContent(() => {
-      rememberEditorChanges();
-    });
-
-    languageSelectEl.addEventListener("change", () => {
-      const active = getFileById(state.activeFileId);
-      if (!active) return;
-      active.language = languageSelectEl.value;
-      if (state.editor) {
-        window.monaco.editor.setModelLanguage(state.editor.getModel(), languageSelectEl.value);
-      }
-      saveProject();
-      logOutput(`Language changed for ${active.name}: ${languageSelectEl.value}`);
-    });
-
-    document.getElementById("save-btn").addEventListener("click", saveCurrentFile);
-    document.getElementById("run-btn").addEventListener("click", runCurrentProject);
-    document.getElementById("new-file-btn").addEventListener("click", createNewFile);
-    document.getElementById("new-folder-btn").addEventListener("click", createNewFolder);
-    document.getElementById("clear-output-btn").addEventListener("click", clearOutput);
-
-    renderTree();
-    renderTabs();
-    logOutput("CodeCraft IDE started successfully.");
-  });
-}
-
-window.addEventListener("DOMContentLoaded", initEditor);
-
-window.addEventListener("beforeunload", () => {
-  if (state.editor && state.activeFileId) {
-    const file = getFileById(state.activeFileId);
-    if (file) file.content = state.editor.getValue();
-    saveProject();
-  }
-});
