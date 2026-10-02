@@ -24,6 +24,7 @@
 
 html, body {
   margin: 0;
+  padding: 0;
   height: 100%;
   font-family: "Inter", sans-serif;
   background: var(--bg);
@@ -32,6 +33,7 @@ html, body {
 
 body {
   min-height: 100vh;
+  overflow: hidden;
 }
 
 button, select {
@@ -45,17 +47,20 @@ button {
 .app-shell {
   display: flex;
   height: 100vh;
+  width: 100%;
   background: linear-gradient(180deg, #0b1220 0%, #0d1117 100%);
 }
 
 .sidebar {
   width: 290px;
+  height: 100vh;
   background: rgba(11, 18, 32, 0.96);
   border-right: 1px solid var(--border);
   padding: 12px 18px 14px 18px;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  flex-shrink: 0;
 }
 
 .status-bar {
@@ -68,6 +73,7 @@ button {
   font-weight: 700;
   font-size: 1.03rem;
   padding: 6px 6px 0;
+  margin-bottom: 8px;
 }
 
 .time {
@@ -87,6 +93,7 @@ button {
   align-items: center;
   gap: 14px;
   padding: 15px 8px 18px;
+  border-bottom: 1px solid var(--border);
 }
 
 .logo {
@@ -100,6 +107,7 @@ button {
   font-weight: 800;
   font-size: 1.8rem;
   line-height: 1;
+  flex-shrink: 0;
 }
 
 .brand-copy {
@@ -128,7 +136,9 @@ button {
 }
 
 .explorer-section {
-  padding-top: 12px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .section-label {
@@ -145,7 +155,7 @@ button {
   flex-direction: column;
   gap: 2px;
   font-size: 0.96rem;
-  max-height: 260px;
+  height: 100%;
   overflow-y: auto;
 }
 
@@ -162,6 +172,7 @@ button {
   border: 0;
   text-align: left;
   width: 100%;
+  flex-shrink: 0;
 }
 
 .tree-node:hover,
@@ -186,9 +197,12 @@ button {
 
 .tools-panel {
   margin-top: auto;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
 }
 
 .tool-btn,
@@ -207,8 +221,9 @@ button {
   background: rgba(110, 231, 183, 0.12);
   color: var(--text);
   border: 1px solid rgba(110, 231, 183, 0.18);
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
+  text-align: center;
 }
 
 .tool-btn:hover {
@@ -235,6 +250,7 @@ button {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  height: 100vh;
 }
 
 .topbar {
@@ -245,6 +261,7 @@ button {
   padding: 10px 20px;
   background: rgba(17, 24, 39, 0.65);
   border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
 }
 
 .topbar-left,
@@ -289,6 +306,7 @@ button {
 .action-btn {
   font-weight: 600;
   font-size: 1.05rem;
+  padding: 10px 18px;
 }
 
 .save-btn {
@@ -298,11 +316,19 @@ button {
   min-width: 84px;
 }
 
+.save-btn:hover {
+  background: rgba(148, 163, 184, 0.18);
+}
+
 .run-btn {
   background: linear-gradient(135deg, var(--accent), var(--accent-strong));
   color: #062116;
   font-weight: 700;
   min-width: 94px;
+}
+
+.run-btn:hover {
+  transform: scale(1.02);
 }
 
 .content-wrapper {
@@ -317,7 +343,7 @@ button {
 
 .editor-section {
   flex: 1;
-  min-width: 0;
+  min-width: 400px;
   display: flex;
   flex-direction: column;
   background: rgba(17, 24, 39, 0.9);
@@ -329,6 +355,7 @@ button {
 .preview-section {
   width: 380px;
   min-width: 380px;
+  max-width: 380px;
   display: flex;
   flex-direction: column;
   background: rgba(17, 24, 39, 0.9);
@@ -345,6 +372,7 @@ button {
   border-bottom: 1px solid var(--border);
   background: rgba(11, 18, 32, 0.9);
   font-weight: 600;
+  flex-shrink: 0;
 }
 
 .refresh-btn {
@@ -353,6 +381,10 @@ button {
   border: 1px solid rgba(96, 165, 250, 0.2);
   padding: 6px 12px;
   font-size: 0.85rem;
+}
+
+.refresh-btn:hover {
+  background: rgba(96, 165, 250, 0.16);
 }
 
 .phone-frame {
@@ -366,6 +398,7 @@ button {
   overflow: hidden;
   margin: 12px;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+  min-height: 0;
 }
 
 .phone-notch {
@@ -373,6 +406,7 @@ button {
   background: #000;
   position: relative;
   border-bottom: 1px solid rgba(255,255,255,0.02);
+  flex-shrink: 0;
 }
 
 .phone-notch::before {
@@ -392,11 +426,13 @@ button {
   width: 100%;
   border: none;
   background: white;
+  min-height: 0;
 }
 
 .phone-bottom {
   height: 12px;
   background: #000;
+  flex-shrink: 0;
 }
 
 .tab-bar {
@@ -407,6 +443,7 @@ button {
   border-bottom: 1px solid var(--border);
   background: rgba(17, 24, 39, 0.9);
   overflow-x: auto;
+  flex-shrink: 0;
 }
 
 .tab {
@@ -435,8 +472,8 @@ button {
 
 #editor-container {
   flex: 1;
-  min-height: 300px;
   width: 100%;
+  min-height: 0;
 }
 
 .output-panel {
@@ -445,6 +482,7 @@ button {
   background: rgba(11, 18, 32, 0.9);
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
 }
 
 .output-header {
@@ -456,6 +494,7 @@ button {
   color: var(--muted);
   font-weight: 600;
   font-size: 1.1rem;
+  flex-shrink: 0;
 }
 
 .clear-btn {
@@ -464,6 +503,10 @@ button {
   border: 1px solid var(--border);
   padding: 6px 12px;
   font-size: 0.85rem;
+}
+
+.clear-btn:hover {
+  background: rgba(248, 113, 113, 0.08);
 }
 
 .output-console {
@@ -477,12 +520,14 @@ button {
   color: #dfeaff;
   background: rgba(15, 23, 42, 0.9);
   white-space: pre-wrap;
+  word-break: break-word;
 }
 
 @media (max-width: 1400px) {
   .preview-section {
-    width: 320px;
-    min-width: 320px;
+    width: 340px;
+    min-width: 340px;
+    max-width: 340px;
   }
 }
 
@@ -491,41 +536,16 @@ button {
     flex-direction: column;
   }
 
-  .preview-section {
-    width: 100%;
+  .editor-section {
+    flex: 1.5;
     min-width: auto;
-    height: 300px;
-  }
-}
-
-@media (max-width: 900px) {
-  .sidebar {
-    width: 240px;
-  }
-}
-
-@media (max-width: 720px) {
-  .app-shell {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .content-wrapper {
-    flex-direction: column;
   }
 
   .preview-section {
     width: 100%;
     min-width: auto;
-    height: 250px;
-  }
-
-  .output-panel {
-    height: 160px;
+    max-width: none;
+    height: 280px;
+    flex: 0 0 280px;
   }
 }
