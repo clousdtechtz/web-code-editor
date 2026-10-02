@@ -20,9 +20,9 @@
     <div class="app-shell">
       <aside class="sidebar">
         <div class="status-bar">
-          <div class="time">21:08</div>
+          <div class="time">21:17</div>
           <div class="status-icons">
-            <span class="status-cellular">◔</span>
+            <span class="status-signal">◔</span>
             <span class="status-wifi">◌</span>
             <span class="status-battery">▣</span>
           </div>
@@ -48,6 +48,32 @@
           <button class="tool-btn tertiary" id="reset-project-btn">Reset project</button>
           <button class="tool-btn download-btn" id="download-btn">↓ Download ZIP</button>
         </div>
+
+        <div class="project-toolbar">
+          <div class="traffic-lights">
+            <span class="light red"></span>
+            <span class="light yellow"></span>
+            <span class="light green"></span>
+          </div>
+
+          <div class="project-name">codecraft-project</div>
+
+          <div class="toolbar-actions">
+            <select id="language-select" aria-label="Select programming language">
+              <option value="html">HTML</option>
+              <option value="javascript">JavaScript</option>
+              <option value="css">CSS</option>
+              <option value="java">Java</option>
+              <option value="cpp">C++</option>
+              <option value="python">Python</option>
+              <option value="typescript">TypeScript</option>
+              <option value="markdown">Markdown</option>
+              <option value="json">JSON</option>
+            </select>
+            <button class="action-btn save-btn" id="save-btn">Save</button>
+            <button class="action-btn run-btn" id="run-btn">Run</button>
+          </div>
+        </div>
       </aside>
 
       <main class="main-panel">
@@ -62,7 +88,7 @@
           </div>
 
           <div class="topbar-right">
-            <select id="language-select" aria-label="Select programming language">
+            <select id="language-select-desktop" aria-label="Select programming language">
               <option value="html">HTML</option>
               <option value="javascript">JavaScript</option>
               <option value="css">CSS</option>
@@ -73,8 +99,8 @@
               <option value="markdown">Markdown</option>
               <option value="json">JSON</option>
             </select>
-            <button class="action-btn save-btn" id="save-btn">Save</button>
-            <button class="action-btn run-btn" id="run-btn">Run</button>
+            <button class="action-btn save-btn" id="save-btn-desktop">Save</button>
+            <button class="action-btn run-btn" id="run-btn-desktop">Run</button>
           </div>
         </header>
 
@@ -104,6 +130,22 @@
           </div>
           <pre id="output-console" class="output-console">CodeCraft IDE ready. Choose a file to start editing.</pre>
         </section>
+
+        <div class="mobile-toolbar">
+          <div class="nav-button back-button">⌃</div>
+          <div class="nav-button active">◉</div>
+          <div class="nav-button muted">◐</div>
+          <div class="nav-button muted">◉</div>
+          <div class="nav-button muted">◔</div>
+          <div class="nav-button add-button">＋</div>
+          <div class="address-bar">
+            <span class="url-icon">◌</span>
+            <span>cloudstechtz.github.io/web-</span>
+            <span class="plus-small">＋</span>
+            <span class="count-pill">8</span>
+            <span class="more-dots">⋮</span>
+          </div>
+        </div>
       </main>
     </div>
 
