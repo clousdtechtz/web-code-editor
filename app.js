@@ -425,7 +425,7 @@ function updatePreview() {
   const jsFile = getFileByName("script.js");
 
   if (!htmlFile) {
-    previewFrameEl.innerHTML = "<p>No index.html file found</p>";
+    previewFrameEl.srcdoc = "<p>No index.html file found</p>";
     return;
   }
 
@@ -443,14 +443,8 @@ function updatePreview() {
     html = html.replace("<script src=\"script.js\"><\/script>", `<script>${jsFile.content}</script>`);
   }
 
-  try {
-    const blob = new Blob([html], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
-    previewFrameEl.src = url;
-    logOutput("✓ Preview updated");
-  } catch (error) {
-    logOutput(`Error updating preview: ${error.message}`);
-  }
+  previewFrameEl.srcdoc = html;
+  logOutput("✓ Preview updated");
 }
 
 async function downloadProjectAsZip() {

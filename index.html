@@ -19,15 +19,24 @@
   <body>
     <div class="app-shell">
       <aside class="sidebar">
+        <div class="status-bar">
+          <div class="time">21:08</div>
+          <div class="status-icons">
+            <span class="status-cellular">◔</span>
+            <span class="status-wifi">◌</span>
+            <span class="status-battery">▣</span>
+          </div>
+        </div>
+
         <div class="brand-row">
           <div class="logo">C</div>
-          <div>
+          <div class="brand-copy">
             <div class="brand-name">CodeCraft</div>
             <div class="brand-sub">IDE</div>
           </div>
         </div>
 
-        <div class="sidebar-section">
+        <div class="sidebar-section explorer-section">
           <div class="section-label">Explorer</div>
           <div id="project-tree" class="project-tree"></div>
         </div>
@@ -90,7 +99,7 @@
 
         <section class="output-panel">
           <div class="output-header">
-            <span>Output Console</span>
+            <span>Output</span>
             <button class="clear-btn" id="clear-output-btn">Clear</button>
           </div>
           <pre id="output-console" class="output-console">CodeCraft IDE ready. Choose a file to start editing.</pre>
