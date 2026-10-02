@@ -6,7 +6,7 @@
     <title>CodeCraft IDE</title>
     <meta
       name="description"
-      content="CodeCraft IDE is a browser-based coding workspace for Java, C++, Python, and more."
+      content="CodeCraft IDE is a browser-based coding workspace with live preview."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -37,6 +37,7 @@
           <button class="tool-btn" id="new-file-btn">+ New file</button>
           <button class="tool-btn secondary" id="new-folder-btn">+ New folder</button>
           <button class="tool-btn tertiary" id="reset-project-btn">Reset project</button>
+          <button class="tool-btn download-btn" id="download-btn">↓ Download ZIP</button>
         </div>
       </aside>
 
@@ -53,13 +54,13 @@
 
           <div class="topbar-right">
             <select id="language-select" aria-label="Select programming language">
+              <option value="html">HTML</option>
+              <option value="javascript">JavaScript</option>
+              <option value="css">CSS</option>
               <option value="java">Java</option>
               <option value="cpp">C++</option>
               <option value="python">Python</option>
-              <option value="javascript">JavaScript</option>
               <option value="typescript">TypeScript</option>
-              <option value="html">HTML</option>
-              <option value="css">CSS</option>
               <option value="markdown">Markdown</option>
               <option value="json">JSON</option>
             </select>
@@ -68,14 +69,28 @@
           </div>
         </header>
 
-        <div class="editor-shell">
-          <div class="tab-bar" id="tab-bar"></div>
-          <div id="editor-container"></div>
+        <div class="content-wrapper">
+          <div class="editor-section">
+            <div class="tab-bar" id="tab-bar"></div>
+            <div id="editor-container"></div>
+          </div>
+
+          <div class="preview-section">
+            <div class="preview-header">
+              <span>📱 Live Preview</span>
+              <button class="refresh-btn" id="refresh-preview-btn">Refresh</button>
+            </div>
+            <div class="phone-frame">
+              <div class="phone-notch"></div>
+              <iframe id="preview-frame" class="preview-iframe" sandbox="allow-scripts"></iframe>
+              <div class="phone-bottom"></div>
+            </div>
+          </div>
         </div>
 
         <section class="output-panel">
           <div class="output-header">
-            <span>Output</span>
+            <span>Output Console</span>
             <button class="clear-btn" id="clear-output-btn">Clear</button>
           </div>
           <pre id="output-console" class="output-console">CodeCraft IDE ready. Choose a file to start editing.</pre>
@@ -84,6 +99,7 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/loader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
